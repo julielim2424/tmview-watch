@@ -1,38 +1,36 @@
-import requests
+from playwright.sync_api import sync_playwright
+import json
 
-url = "https://www.tmdn.org/tmview/api/search/results?translate=true"
+url = "https://www.tmdn.org/tmview/#/tmview/results?page=1&pageSize=30&criteria=C&basicSearch=LG&sortColumn=applicationDate&desc=true"
 
-payload = {
-    "page": "1",
-    "pageSize": "30",
-    "criteria": "C",
-    "basicSearch": "LG",
-    "sortColumn": "applicationDate",
-    "desc": "true",
-    "newPage": True,
-    "fields": [
-        "ST13",
-        "tmName",
-        "tmOffice",
-        "applicationNumber",
-        "applicationDate",
-        "tradeMarkStatus"
-    ]
-}
+def handle_response(response):
+    if "search/results" in response.url:
+        try:
+            data = response.json()
 
-response = requests.post(url, json=payload)
+            print("RESULT COUNT:", len(data.get("tradeMarks", [])))
 
-print("STATUS:", response.status_code)
+            for tm in data.get("tradeMarks", [])[:10]:
+                print(
+                    tm.get("tmName"),
+                    "|",
+                    tm.get("applicationNumber"),
+                    "|",
+                    tm.get("applicationDate")
+                )
 
-data = response.json()
+        except Exception as e:
+            print("ERROR:", e)
 
-print("TOTAL:", len(data.get("tradeMarks", [])))
+with sync_playwright() as p:
+    browser = p.chromium.launch(headless=True)
 
-for tm in data.get("tradeMarks", [])[:10]:
-    print(
-        tm.get("tmName"),
-        "|",
-        tm.get("tmOffice"),
-        "|",
-        tm.get("applicationNumber")
-    )
+    page = browser.new_page()
+
+    page.on("response", handle_response)
+
+    page.goto(url)
+
+    page.wait_for_timeout(10000)
+
+    browser.close()
