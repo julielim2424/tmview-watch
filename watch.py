@@ -1,5 +1,4 @@
 from playwright.sync_api import sync_playwright
-import json
 
 url = "https://www.tmdn.org/tmview/#/tmview/results?page=1&pageSize=30&criteria=C&basicSearch=LG&sortColumn=applicationDate&desc=true"
 
@@ -8,9 +7,15 @@ def handle_response(response):
         try:
             data = response.json()
 
-            print("RESULT COUNT:", len(data.get("tradeMarks", [])))
+            print("===== DATA KEYS =====")
+            print(data.keys())
 
-            for tm in data.get("tradeMarks", [])[:10]:
+            print("===== RESULT COUNT =====")
+            print(len(data.get("tradeMarks", [])))
+
+            print("===== FIRST 5 RESULTS =====")
+
+            for tm in data.get("tradeMarks", [])[:5]:
                 print(
                     tm.get("tmName"),
                     "|",
