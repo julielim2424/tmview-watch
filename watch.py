@@ -1,26 +1,38 @@
-from playwright.sync_api import sync_playwright
+import requests
 
-url = "https://www.tmdn.org/tmview/#/tmview/results?page=1&pageSize=30&criteria=C&basicSearch=LG&sortColumn=applicationDate&desc=true"
+url = "https://www.tmdn.org/tmview/api/search/results?translate=true"
 
-def log_request(request):
-    if "search/results" in request.url:
-        print("REQUEST URL:", request.url)
+payload = {
+    "page": "1",
+    "pageSize": "30",
+    "criteria": "C",
+    "basicSearch": "LG",
+    "sortColumn": "applicationDate",
+    "desc": "true",
+    "newPage": True,
+    "fields": [
+        "ST13",
+        "tmName",
+        "tmOffice",
+        "applicationNumber",
+        "applicationDate",
+        "tradeMarkStatus"
+    ]
+}
 
-        try:
-            print("POST DATA:")
-            print(request.post_data)
-        except:
-            pass
+response = requests.post(url, json=payload)
 
-with sync_playwright() as p:
-    browser = p.chromium.launch(headless=True)
+print("STATUS:", response.status_code)
 
-    page = browser.new_page()
+data = response.json()
 
-    page.on("request", log_request)
+print("TOTAL:", len(data.get("tradeMarks", [])))
 
-    page.goto(url)
-
-    page.wait_for_timeout(10000)
-
-    browser.close()
+for tm in data.get("tradeMarks", [])[:10]:
+    print(
+        tm.get("tmName"),
+        "|",
+        tm.get("tmOffice"),
+        "|",
+        tm.get("applicationNumber")
+    )
