@@ -1,0 +1,26 @@
+name: Email Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  send-email:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send Email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: TMView Watch Test
+          to: ${{ secrets.EMAIL_USER }}
+          from: TMView Watch
+          body: |
+            축하합니다.
+            
+            GitHub Actions에서 메일 발송이 정상 동작합니다.
+            
+            다음 단계는 TMView 상표 감시입니다.
