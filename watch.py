@@ -1,1 +1,1 @@
-print("JULIELIM TEST 999999")
+print("HELLO LG")
