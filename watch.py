@@ -15,6 +15,8 @@ def handle_response(response):
     global results
 
     if "search/results" in response.url:
+        print("FOUND API:", response.url)
+
         try:
             data = response.json()
 
@@ -42,7 +44,7 @@ with sync_playwright() as p:
 
     page.goto(URL)
 
-    page.wait_for_timeout(10000)
+    page.wait_for_timeout(30000)
 
     browser.close()
 
