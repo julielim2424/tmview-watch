@@ -28,7 +28,7 @@ jobs:
 
       - name: Run test
         run: |
-          python save_test.py
+          python watch.py
 
       - name: Commit seen.json
         run: |
