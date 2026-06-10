@@ -24,5 +24,8 @@ jobs:
           playwright install chromium
 
       - name: Run watch
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: |
           python watch.py
