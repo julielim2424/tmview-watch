@@ -2,12 +2,13 @@ from playwright.sync_api import sync_playwright
 
 url = "https://www.tmdn.org/tmview/#/tmview/results?page=1&pageSize=30&criteria=C&basicSearch=LG&sortColumn=applicationDate&desc=true"
 
-def log_response(response):
-    if "search/results" in response.url:
-        print("FOUND:", response.url)
+def log_request(request):
+    if "search/results" in request.url:
+        print("REQUEST URL:", request.url)
 
         try:
-            print(response.text()[:5000])
+            print("POST DATA:")
+            print(request.post_data)
         except:
             pass
 
@@ -16,7 +17,7 @@ with sync_playwright() as p:
 
     page = browser.new_page()
 
-    page.on("response", log_response)
+    page.on("request", log_request)
 
     page.goto(url)
 
