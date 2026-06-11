@@ -108,15 +108,17 @@ msg["Subject"] = f"[TMVIEW] 신규 {len(new_results)}건"
 
 msg.attach(MIMEText(email_body, "plain", "utf-8"))
 
-server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
+try:
+    server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
 
-server.login(EMAIL_USER, EMAIL_PASSWORD)
+    server.login(EMAIL_USER, EMAIL_PASSWORD)
 
-server.send_message(msg)
+    server.send_message(msg)
 
-server.quit()
+    print("EMAIL SENT")
 
-print("EMAIL SENT")
+except Exception as e:
+    print("EMAIL ERROR:", e)
 
 # seen.json 업데이트
 for tm in new_results:
