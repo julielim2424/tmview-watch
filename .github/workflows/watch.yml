@@ -34,5 +34,15 @@ jobs:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: |
-          python watch.py
+          python watch.py    
+          
+      - name: Commit seen.json
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
 
+          git add seen.json
+
+          git commit -m "update seen.json" || echo "No changes"
+
+          git push
