@@ -3,7 +3,7 @@ name: TMView Watch
 on:
   workflow_dispatch:
   schedule:
-    - cron: '10 23 * * *'
+    - cron: '05 2 * * *'
 
 permissions:
   contents: write
